@@ -16,9 +16,18 @@ Upload the data to an S3 bucket through the AWS Gateway so that SageMaker has ac
 
 ## Hyperparameter Tuning
 What kind of model did you choose for this experiment and why? Give an overview of the types of parameters and their ranges used for the hyperparameter search
+I chose the learning rate and the batch-size as hyperparameters to tune. The learning rate is very important, as a wrong / to small learning rate can lead to overfitting, but a too large one might create non-optimal results as well.
+The batch size is also very important as it controls the accuracy of the estimate of the error gradient when training neural networks.
+
+hyperparameter_ranges = {
+    "lr": ContinuousParameter(0.001, 0.1),
+    "batch-size": CategoricalParameter([32, 64, 128, 256]),
+}
 
 Remember that your README should:
 - Include a screenshot of completed training jobs
+
+
 - Logs metrics during the training process
 - Tune at least two hyperparameters
 - Retrieve the best best hyperparameters from all your training jobs
@@ -36,6 +45,7 @@ Remember that your README should:
 **TODO**: Give an overview of the deployed model and instructions on how to query the endpoint with a sample input.
 
 **TODO** Remember to provide a screenshot of the deployed active endpoint in Sagemaker.
+![title]("endpoint_in_service.png")
 
 ## Standout Suggestions
 **TODO (Optional):** This is where you can provide information about any standout suggestions that you have attempted.
