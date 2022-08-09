@@ -22,6 +22,7 @@ import sagemaker
 from PIL import ImageFile
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 from smdebug.pytorch import get_hook
+import smdebug.pytorch as smd
 from smdebug import modes
 from smdebug.profiler.utils import str2bool
 from sagemaker.debugger import ProfilerConfig, FrameworkProfile
@@ -33,7 +34,7 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 logger.addHandler(logging.StreamHandler(sys.stdout))
 
-def test(model, test_loader, device):
+def test(model, test_loader,criterion, device, hook):
     '''
     TODO: Complete this function that can take a model and a 
           testing data loader and will get the test accuray/loss of the model
@@ -49,7 +50,7 @@ def test(model, test_loader, device):
             data=data.to(device) # need to put data on GPU device
             target=target.to(device)
             output = model(data)
-            test_loss += criterion(output, target, size_average=False).item()  # sum up batch loss
+            test_loss += criterion(output, target)  # sum up batch loss
             pred = output.max(1, keepdim=True)[1]  # get the index of the max log-probability
             correct += pred.eq(target.view_as(pred)).sum().item()
 
@@ -60,7 +61,7 @@ def test(model, test_loader, device):
         )
     )
 
-def train(model, train_loader, validation_loader, criterion, optimizer, epoch, device, hock):
+def train(model, train_loader, validation_loader, criterion, optimizer, epoch, device, hook):
     '''
     TODO: Complete this function that can take a model and
           data loaders for training and will get train the model
@@ -193,8 +194,8 @@ def main(args):
     train_loader, validation_loader, test_loader = create_data_loaders(args.data_dir, args.batch_size)
     
     for epoch in range(1, args.epochs + 1):
-        model = train(model, train_loader, validation_loader, criterion, optimizer, epoch, device, hock)
-        test(model, test_loader, device, hock)
+        model = train(model, train_loader, validation_loader, criterion, optimizer, epoch, device, hook)
+        test(model, test_loader, criterion, device, hook)
     
     
     #model=train(model, train_loader, loss_criterion, optimizer)
