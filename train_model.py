@@ -90,39 +90,6 @@ def train(model, train_loader, validation_loader, criterion, optimizer, epoch, d
                 )
     return model 
 
-#    print("START TRAINING")
-#    if hook:
-#        hook.set_mode(modes.TRAIN)
-#    model.train()
-#    train_loss = 0
-#    for data, target in train_loader:
-#        data=data.to(device)
-#        target=target.to(device)
-#        optimizer.zero_grad()
-#        pred = model(data)             
-#        loss = criterion(pred, target)
-#        loss.backward()
-#        optimizer.step()
-#        train_loss += loss.item()
-#        
-#    
-#    print("START VALIDATING")
-#    if hook:
-#        hook.set_mode(modes.EVAL)
-#    model.eval()
-#    val_loss = 0
-#    with torch.no_grad():
-#        for data, target in validation_loader:
-#            data=data.to(device)
-#            target=target.to(device)
-#            pred = model(data)
-#            loss = criterion(pred, targets)
-#            val_loss += loss.item()
-#
-#        print(
-#            "Epoch %d: train loss %.3f, val loss %.3f"
-#            % (epoch, train_loss, val_loss)
-#        )
 
     
 def net():
@@ -196,14 +163,6 @@ def main(args):
     for epoch in range(1, args.epochs + 1):
         model = train(model, train_loader, validation_loader, criterion, optimizer, epoch, device, hook)
         test(model, test_loader, criterion, device, hook)
-    
-    
-    #model=train(model, train_loader, loss_criterion, optimizer)
-    
-    '''
-    TODO: Test the model to see its accuracy
-    '''
-    #test(model, test_loader, criterion)
     
     '''
     TODO: Save the trained model
